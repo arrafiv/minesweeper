@@ -23,7 +23,7 @@ public class Minesweeper {
 		int bomb = Integer.parseInt(br.readLine());
 		ArrayList<String> listBomb = new ArrayList<String>();
 
-		//Save bomb in selected tile
+		//Save bomb
 		System.out.println("Bomb Coordinate (m,n): ");
 		for (int i = 0; i < bomb; i++) {
 			listBomb.add(br.readLine());
@@ -32,6 +32,8 @@ public class Minesweeper {
 		maze = constructMaze(size, listBomb);
 
 		System.out.println("LET'S PLAY!");
+		
+		//print the maze
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
 				if (maze[i][j].equals("@")) {
@@ -47,7 +49,7 @@ public class Minesweeper {
 
 		String selectedTile = "";
 		
-		System.out.println("Masukkan koordinat yang dipilih (m,n) : ");
+		System.out.println("Select one tile coordinate (m,n) : ");
 		while (!(line = br.readLine()).isEmpty()) {
 			selectedTile = line;
 			String[] split = selectedTile.split(",");
@@ -55,11 +57,13 @@ public class Minesweeper {
 			int y = Integer.parseInt(split[1]) - 1;
 
 			if (listBomb.contains(line)) {
+				//if the player select the bomb, it's the end of the game.
 				System.out.println("IT'S A BOMB! GAME OVER!");
 				break;
 			} else {
 				findIt(x, y);
 
+				//print the maze after selecting on tile
 				for (int i = 0; i < size; i++) {
 					for (int j = 0; j < size; j++) {
 						if (maze[i][j].equals("@")) {
@@ -126,88 +130,100 @@ public class Minesweeper {
 		boolean found = false;
 		int jmlBombDisekitar = 0;
 
+		//Check the bomb around selectedTile
 		if (x != 0 && maze[x - 1][y] == "@") {
+			//up
 			jmlBombDisekitar += 1;
 			found = true;
 		}
 
 		if (x != 0 && y != size - 1 && maze[x - 1][y + 1] == "@") {
+			//up-right
 			jmlBombDisekitar += 1;
 			found = true;
 		}
 
 		if (y != size - 1 && maze[x][y + 1] == "@") {
+			//right
 			jmlBombDisekitar += 1;
 			found = true;
 		}
 
 		if (x != size - 1 && y != size - 1 && maze[x + 1][y + 1] == "@") {
+			//right-down
 			jmlBombDisekitar += 1;
 			found = true;
 		}
 
 		if (x != size - 1 && maze[x + 1][y] == "@") {
+			//down
 			jmlBombDisekitar += 1;
 			found = true;
 		}
 
 		if (x != size - 1 && y != 0 && maze[x + 1][y - 1] == "@") {
+			//left-down
 			jmlBombDisekitar += 1;
 			found = true;
 		}
 
 		if (y != 0 && maze[x][y - 1] == "@") {
+			//left
 			jmlBombDisekitar += 1;
 			found = true;
 		}
 
 		if (x != 0 && y != 0 && maze[x - 1][y - 1] == "@") {
+			//up-left
 			jmlBombDisekitar += 1;
 			found = true;
 		}
 
 		if (found == true) {
+			//mark number of bomb around selectedTile
 			maze[x][y] = "" + jmlBombDisekitar;
 			return;
 		} else if (maze[x][y] == ".") {
 			return;
 		} else if (maze[x][y] == "1" || maze[x][y] == "2" || maze[x][y] == "3" || maze[x][y] == "4" || maze[x][y] == "5"
 				|| maze[x][y] == "6" || maze[x][y] == "7" || maze[x][y] == "8") {
+			//maximum number of bomb around one tile is 8
 			return;
 		} else {
+			//mark selected tile with "." if no bomb around
 			maze[x][y] = ".";
 		}
 
 		if (x != 0) {
-			// atas
+			//up
 			findIt(x - 1, y);
 		}
 		if (x != 0 && y != size - 1) {
-			// kanan atas
+			//up-right
 			findIt(x - 1, y + 1);
 		}
 		if (y != size - 1) {
-			// kanan
+			//right
 			findIt(x, y + 1);
 		}
 		if (x != size - 1 && y != size - 1) {
-			// kanan bawah
+			//right-down
 			findIt(x + 1, y + 1);
 		}
 		if (x != size - 1) {
-			// bawah
+			//down
 			findIt(x + 1, y);
 		}
 		if (x != size - 1 && y != 0) {
-			// kiri bawah
+			//left-down
 			findIt(x + 1, y - 1);
 		}
 		if (y != 0) {
-			// kiri
+			//left
 			findIt(x, y - 1);
 		}
 		if (x != 0 && y != 0) {
-			// kiri atas
+			//up-left
 			findIt(x - 1, y - 1);
 		}
 	}
